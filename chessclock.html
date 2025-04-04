@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<!---->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Clock Camera</title>
+</head>
+<body>
+    <h1>Press Left/Right Arrow to Take a Picture</h1>
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        // Access the device camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error accessing camera: ", err);
+            });
+
+        // Function to take a picture
+        function takePicture() {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imgData = canvas.toDataURL('image/png');
+            console.log(imgData); // You can save or display the image data as needed
+        }
+
+        // Listen for keydown events
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                takePicture();
+            }
+        });
+    </script>
+</body>
+</html>
